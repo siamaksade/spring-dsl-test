@@ -6,7 +6,6 @@ metadata:
         app.kubernetes.io/managed-by: tkn-dsl
     annotations:
         pipelinesascode.tekton.dev/on-event: '[push]'
-        pipelinesascode.tekton.dev/on-path-change: '[src/**]'
         pipelinesascode.tekton.dev/on-target-branch: '[main]'
         pipelinesascode.tekton.dev/task: s2i-java:0.8.0
         pipelinesascode.tekton.dev/task-1: maven:0.4.0
