@@ -7,7 +7,7 @@ metadata:
     annotations:
         pipelinesascode.tekton.dev/on-event: '[push]'
         pipelinesascode.tekton.dev/on-target-branch: '[main]'
-        pipelinesascode.tekton.dev/task: s2i-java:0.8.0
+        pipelinesascode.tekton.dev/task: https://raw.githubusercontent.com/openshift-pipelines/tektoncd-catalog/p/tasks/task-s2i-java/0.8.0/task-s2i-java.yaml
         pipelinesascode.tekton.dev/task-1: maven:0.4.0
         pipelinesascode.tekton.dev/task-2: git-clone:0.10.0
 spec:
@@ -46,7 +46,7 @@ spec:
                   workspace: shared-workspace
             - name: build-image
               taskRef:
-                name: s2i-java:0.8.0
+                name: https://raw.githubusercontent.com/openshift-pipelines/tektoncd-catalog/p/tasks/task-s2i-java/0.8.0/task-s2i-java.yaml
               runAfter:
                 - build-jar
               params:
