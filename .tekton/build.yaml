@@ -22,7 +22,7 @@ spec:
         tasks:
             - name: git
               taskRef:
-                name: git-clone:0.10.0
+                name: git-clone
               params:
                 - name: revision
                   value: '{{ revision }}'
@@ -33,7 +33,7 @@ spec:
                   workspace: shared-workspace
             - name: build-jar
               taskRef:
-                name: maven:0.4.0
+                name: maven
               runAfter:
                 - git
               params:
