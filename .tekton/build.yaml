@@ -16,7 +16,6 @@ spec:
               default: quay.io/siamaksade/spring-petclinic:{{ source_branch }}
         workspaces:
             - name: shared-workspace
-            - name: secret-quay
         tasks:
             - name: git
               taskSpec:
@@ -600,8 +599,6 @@ spec:
               workspaces:
                 - name: source
                   workspace: shared-workspace
-                - name: dockerconfig
-                  workspace: secret-quay
             - name: deploy
               taskSpec:
                 workspaces:
@@ -665,6 +662,3 @@ spec:
                 resources:
                     requests:
                         storage: 1Gi
-        - name: secret-quay
-          secret:
-            secretName: quay-credentials
