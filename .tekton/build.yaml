@@ -995,7 +995,7 @@ spec:
                       name: ssl-ca-directory
                       optional: true
               runAfter:
-                - security-scan
+                - build-image
               params:
                 - name: url
                   value: https://github.com/siamaksade/spring-petclinic-config
