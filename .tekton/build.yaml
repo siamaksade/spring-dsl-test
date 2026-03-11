@@ -16,6 +16,7 @@ spec:
         workspaces:
             - name: shared-workspace
             - name: secret-quay
+            - name: secret-rh-registry
         tasks:
             - name: git
               taskSpec:
@@ -610,8 +611,8 @@ spec:
                         - $(params.ENV_VARS[*])
                       env:
                         - name: S2I_BUILDER_IMAGE
-                          value: registry.access.redhat.com/openjdk-els/openjdk-11-rhel8:latest
-                      image: registry.access.redhat.com/source-to-image/source-to-image-rhel8:v1.3.9-6
+                          value: registry.redhat.io/ubi8/openjdk-21:1.23-4.1771813042
+                      image: registry.redhat.io/source-to-image/source-to-image-rhel8:1.6.0
                       name: s2i-generate
                       script: |
                         set -e
@@ -712,3 +713,6 @@ spec:
         - name: secret-quay
           secret:
             secretName: quay-credentials
+        - name: secret-rh-registry
+          secret:
+            secretName: rh-registry
