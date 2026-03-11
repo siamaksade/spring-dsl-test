@@ -1011,7 +1011,6 @@ spec:
                       optional: true
               runAfter:
                 - git-manifests
-                - build-image
               params:
                 - name: SCRIPT
                   value: oc apply -k $(workspaces.manifest_dir.path)/environments/dev
