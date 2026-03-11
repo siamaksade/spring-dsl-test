@@ -967,12 +967,13 @@ spec:
                         - name: WORKSPACES_KUBECONFIG_DIR_PATH
                           value: $(workspaces.kubeconfig_dir.path)
                 steps:
-                    - image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+                    - image: registry.access.redhat.com/ubi9-minimal
                       name: before-run
                       script: |
                         #!/bin/sh
                         cd $(workspaces.manifest_dir.path)/environments/dev
-                        kustomize edit set image spring-petclinic=$(tasks.build-image.results.IMAGE_URL)@$(tasks.build-image.results.IMAGE_DIGEST)
+                        sed -i "s|spring-petclinic:.*|spring-petclinic:latest@$(tasks.build-image.results.IMAGE_DIGEST)|g" kustomization.yaml
+                        cat kustomization.yaml
                     - computeResources: {}
                       env:
                         - name: HOME
@@ -992,7 +993,7 @@ spec:
                       volumeMounts:
                         - mountPath: /scripts
                           name: scripts-dir
-                    - image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+                    - image: registry.access.redhat.com/ubi9-minimal
                       name: after-run
                       onError: continue
                       script: |
