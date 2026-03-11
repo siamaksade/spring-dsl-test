@@ -319,7 +319,7 @@ spec:
                       type: string
                 steps:
                     - args:
-                        - maven
+                        - '**/pom.xml'
                       env:
                         - name: PARAM_SOURCE
                           value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
@@ -436,7 +436,7 @@ spec:
                         echo -n $VERSION | tee $(results.version.path)
                       workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
                     - args:
-                        - maven
+                        - '**/pom.xml'
                       env:
                         - name: PARAM_TARGET
                           value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
