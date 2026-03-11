@@ -608,6 +608,8 @@ spec:
                           value: $(results.IMAGE_URL.path)
                         - name: RESULTS_IMAGE_DIGEST_PATH
                           value: $(results.IMAGE_DIGEST.path)
+                        - name: DOCKER_CONFIG
+                          value: $(workspaces.dockerconfig.path)
                 steps:
                     - args:
                         - $(params.ENV_VARS[*])
@@ -676,6 +678,8 @@ spec:
               workspaces:
                 - name: source
                   workspace: shared-workspace
+                - name: dockerconfig
+                  workspace: secret-quay
             - name: deploy
               taskSpec:
                 workspaces:
