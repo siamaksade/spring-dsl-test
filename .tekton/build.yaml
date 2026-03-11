@@ -15,8 +15,7 @@ spec:
               default: quay.io/siamaksade/spring-petclinic:{{ source_branch }}
         workspaces:
             - name: shared-workspace
-            - name: secret-quay
-            - name: secret-rh-registry
+            - name: secret-quay-credentials
         tasks:
             - name: git
               taskSpec:
@@ -332,7 +331,7 @@ spec:
                         - name: PARAM_INSECURE
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-quay.path)
+                          value: $(workspaces.secret-quay-credentials.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-fetch-m2
                       results:
@@ -455,7 +454,7 @@ spec:
                         - name: PARAM_FORCE_CACHE_UPLOAD
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-quay.path)
+                          value: $(workspaces.secret-quay-credentials.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-upload-m2
                       script: |
@@ -604,8 +603,6 @@ spec:
                           value: $(results.IMAGE_URL.path)
                         - name: RESULTS_IMAGE_DIGEST_PATH
                           value: $(results.IMAGE_DIGEST.path)
-                        - name: DOCKER_CONFIG
-                          value: $(workspaces.dockerconfig.path)
                 steps:
                     - args:
                         - $(params.ENV_VARS[*])
@@ -673,8 +670,6 @@ spec:
               workspaces:
                 - name: source
                   workspace: shared-workspace
-                - name: dockerconfig
-                  workspace: secret-quay
             - name: deploy
               taskSpec:
                 workspaces:
@@ -710,9 +705,6 @@ spec:
                 resources:
                     requests:
                         storage: 1Gi
-        - name: secret-quay
+        - name: secret-quay-credentials
           secret:
             secretName: quay-credentials
-        - name: secret-rh-registry
-          secret:
-            secretName: rh-registry

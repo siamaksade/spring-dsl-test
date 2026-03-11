@@ -7,10 +7,6 @@ on:
 params:
   image_url: "quay.io/siamaksade/spring-petclinic:{{ source_branch }}"
 
-secrets:
-  quay: quay-credentials
-  rh-registry: rh-registry
-
 cache:
   image: oci://quay.io/siamaksade/spring-petclinic-m2-cache
   credentials: quay-credentials
@@ -43,8 +39,6 @@ tasks:
     uses: tasks/task-s2i-java.yaml
     params:
       IMAGE: $(params.image_url)
-    workspaces:
-      dockerconfig: secret-quay
 
   deploy:
     image: registry.redhat.io/rhel8/nodejs-22-minimal:latest
