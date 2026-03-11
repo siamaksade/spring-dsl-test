@@ -255,12 +255,6 @@ spec:
               workspaces:
                 - name: output
                   workspace: shared-workspace
-                - name: ssh-directory
-                  workspace: shared-workspace
-                - name: basic-auth
-                  workspace: shared-workspace
-                - name: ssl-ca-directory
-                  workspace: shared-workspace
             - name: build-jar
               taskSpec:
                 description: This Task can be used to run a Maven build. It uses a workspace to store m2 local repo.
@@ -426,8 +420,6 @@ spec:
                 - name: source
                   workspace: shared-workspace
                 - name: maven-settings
-                  workspace: shared-workspace
-                - name: maven-local-repo
                   workspace: shared-workspace
             - name: build-image
               taskSpec:
@@ -600,8 +592,6 @@ spec:
                   value: '{{ image_url }}'
               workspaces:
                 - name: source
-                  workspace: shared-workspace
-                - name: dockerconfig
                   workspace: shared-workspace
             - name: deploy
               taskSpec:
