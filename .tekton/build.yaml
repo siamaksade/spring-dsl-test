@@ -94,6 +94,11 @@ spec:
                     - description: The epoch timestamp of the commit that was fetched by this Task.
                       name: committer-date
                 steps:
+                    - image: registry.access.redhat.com/ubi9-minimal
+                      name: before-run
+                      script: |
+                        #!/bin/sh
+                        echo "#### BEFORE RUN ####"
                     - env:
                         - name: HOME
                           value: $(params.userHome)
@@ -221,6 +226,12 @@ spec:
                       volumeMounts:
                         - mountPath: $(params.userHome)
                           name: user-home
+                    - image: registry.access.redhat.com/ubi9-minimal
+                      name: after-run
+                      onError: continue
+                      script: |
+                        #!/bin/sh
+                        echo "#### AFTER RUN ####"
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -356,6 +367,11 @@ spec:
                         else
                           echo -n false > $(step.results.fetched.path)
                         fi
+                    - image: registry.access.redhat.com/ubi9-minimal
+                      name: before-run
+                      script: |
+                        #!/bin/sh
+                        echo "#### BEFORE RUN ####"
                     - image: registry.access.redhat.com/ubi8/ubi-minimal:8.2
                       name: mvn-settings
                       script: |
@@ -438,6 +454,12 @@ spec:
                         VERSION=$(/usr/bin/mvn -s $(workspaces.maven-settings.path)/settings.xml '-Dmaven.repo.local=$(workspaces.maven-local-repo.path)/.m2' -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
                         echo -n $VERSION | tee $(results.version.path)
                       workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
+                    - image: registry.access.redhat.com/ubi9-minimal
+                      name: after-run
+                      onError: continue
+                      script: |
+                        #!/bin/sh
+                        echo "#### AFTER RUN ####"
                     - args:
                         - '**/pom.xml'
                       env:
@@ -609,6 +631,11 @@ spec:
                         - name: RESULTS_IMAGE_DIGEST_PATH
                           value: $(results.IMAGE_DIGEST.path)
                 steps:
+                    - image: registry.access.redhat.com/ubi9-minimal
+                      name: before-run
+                      script: |
+                        #!/bin/sh
+                        echo "#### BEFORE RUN ####"
                     - args:
                         - $(params.BUILD_ARGS[*])
                       computeResources: {}
@@ -630,6 +657,12 @@ spec:
                         - mountPath: /scripts
                           name: scripts-dir
                       workingDir: $(workspaces.source.path)
+                    - image: registry.access.redhat.com/ubi9-minimal
+                      name: after-run
+                      onError: continue
+                      script: |
+                        #!/bin/sh
+                        echo "#### AFTER RUN ####"
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
