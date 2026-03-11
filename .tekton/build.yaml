@@ -620,11 +620,22 @@ spec:
                           value: /.m2
                         - name: WORKING_DIR
                           value: $(workspaces.shared-workspace.path)
+                    - name: before-run
+                      image: registry.redhat.io/rhel8/nodejs-22-minimal:latest
+                      script: |
+                        #!/bin/sh
+                        echo "#### BEFORE RUN ####"
                     - name: deploy
                       image: registry.redhat.io/rhel8/nodejs-22-minimal:latest
                       script: |-
                         #!/bin/sh
                         npx ascii-themes generate OpenShift
+                    - name: after-run
+                      image: registry.redhat.io/rhel8/nodejs-22-minimal:latest
+                      script: |
+                        #!/bin/sh
+                        echo "#### AFTER RUN ####"
+                      onError: continue
                     - name: cache-upload--m2
                       ref:
                         name: cache-upload
