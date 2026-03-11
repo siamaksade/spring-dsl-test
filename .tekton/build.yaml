@@ -502,7 +502,7 @@ spec:
               taskSpec:
                 description: |
                     Builds the source code using the s2i's Java builder-image
-                    "image-registry.openshift-image-registry.svc:5000/openshift/java".
+                    "registry.access.redhat.com/openjdk-els/openjdk-11-rhel8:latest".
                 params:
                     - description: |
                         Fully qualified container image name to be built by s2i.
@@ -536,7 +536,6 @@ spec:
                     - default: oci
                       description: The format of the built container, oci or docker
                       name: FORMAT
-                      type: string
                     - default: ""
                       description: |
                         Extra parameters passed for the build command when building images.
@@ -551,7 +550,6 @@ spec:
                       description: |
                         Skip pushing the image to the container registry.
                       name: SKIP_PUSH
-                      type: string
                     - default: "true"
                       description: |
                         Sets the TLS verification flag, `true` is recommended.
@@ -566,13 +564,10 @@ spec:
                     - description: |
                         Fully qualified image name.
                       name: IMAGE_URL
-                      type: string
                     - description: |
                         Digest of the image just built.
                       name: IMAGE_DIGEST
-                      type: string
                 stepTemplate:
-                    computeResources: {}
                     env:
                         - name: PARAMS_IMAGE
                           value: $(params.IMAGE)
@@ -613,11 +608,10 @@ spec:
                 steps:
                     - args:
                         - $(params.ENV_VARS[*])
-                      computeResources: {}
                       env:
                         - name: S2I_BUILDER_IMAGE
-                          value: image-registry.openshift-image-registry.svc:5000/openshift/java:$(params.VERSION)
-                      image: registry.redhat.io/source-to-image/source-to-image-rhel9@sha256:bc10e7d6122ede5cf4f2882c200447683255465a1080e826761e90bfb983506e
+                          value: registry.access.redhat.com/openjdk-els/openjdk-11-rhel8:latest
+                      image: registry.access.redhat.com/source-to-image/source-to-image-rhel8:v1.3.9-6
                       name: s2i-generate
                       script: |
                         set -e
@@ -645,8 +639,7 @@ spec:
                       workingDir: $(workspaces.source.path)
                     - command:
                         - /scripts/s2i-build.sh
-                      computeResources: {}
-                      image: registry.redhat.io/rhel9/buildah@sha256:4e604d18fc609d25b2fc99814281944acaac78e8cd5e47b8359709b8b505db86
+                      image: registry.access.redhat.com/ubi8/buildah:8.10-5
                       name: s2i-build
                       securityContext:
                         capabilities:
@@ -667,6 +660,7 @@ spec:
                     - description: |
                         Application source code, the build context for S2I workflow.
                       name: source
+                      optional: false
                     - description: An optional workspace that allows providing a .docker/config.json file for Buildah to access the container registry. The file should be placed at the root of the Workspace with name config.json.
                       name: dockerconfig
                       optional: true
