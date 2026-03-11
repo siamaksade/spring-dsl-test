@@ -36,9 +36,10 @@ tasks:
       key: ["**/pom.xml"]
 
   build-image:
-    uses: tasks/task-s2i-java.yaml
+    uses: buildah:0.8.0
     params:
       IMAGE: $(params.image_url)
+      TLS_VERIFY: false
 
   deploy:
     image: registry.redhat.io/rhel8/nodejs-22-minimal:latest
