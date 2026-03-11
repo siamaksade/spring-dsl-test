@@ -231,7 +231,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####""
+                        echo "#### AFTER RUN ####"
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -459,7 +459,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####""
+                        echo "#### AFTER RUN ####"
                     - args:
                         - '**/pom.xml'
                       env:
@@ -662,7 +662,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####""
+                        echo "#### AFTER RUN ####"
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
@@ -740,14 +740,21 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####""
+                        echo "#### AFTER RUN ####"
                 workspaces:
                     - name: manifest-dir
               runAfter:
                 - build-image
               params:
+                - name: ARGS
+                  value:
+                    - image
+                    - --severity
+                    - HIGH,CRITICAL
+                    - --exit-code
+                    - "0"
                 - name: IMAGE_PATH
-                  value: '@$(tasks.build-image.results.IMAGE_URL)@$(tasks.build-image.results.IMAGE_DIGEST)'
+                  value: $(tasks.build-image.results.IMAGE_URL)@$(tasks.build-image.results.IMAGE_DIGEST)
                 - name: TRIVY_IMAGE
                   value: docker.io/aquasec/trivy:latest
               workspaces:
@@ -967,7 +974,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####""
+                        echo "#### AFTER RUN ####"
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -1063,7 +1070,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####""
+                        echo "#### AFTER RUN ####"
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
