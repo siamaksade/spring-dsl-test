@@ -331,7 +331,7 @@ spec:
                         - name: PARAM_INSECURE
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-quay-credentials.path)
+                          value: $(workspaces.secret-quay.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-fetch-workspace-maven-local-repo--m2
                       results:
@@ -454,7 +454,7 @@ spec:
                         - name: PARAM_FORCE_CACHE_UPLOAD
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-quay-credentials.path)
+                          value: $(workspaces.secret-quay.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-upload-workspace-maven-local-repo--m2
                       script: |
