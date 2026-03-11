@@ -319,6 +319,19 @@ spec:
                       name: version
                       type: string
                 steps:
+                    - name: cache-fetch--m2
+                      params:
+                        - name: PATTERNS
+                          value:
+                            - maven
+                        - name: SOURCE
+                          value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
+                        - name: CACHE_PATH
+                          value: /.m2
+                        - name: WORKING_DIR
+                          value: $(workspaces.source.path)
+                      ref:
+                        name: cache-fetch
                     - image: registry.access.redhat.com/ubi8/ubi-minimal:8.2
                       name: mvn-settings
                       script: |
@@ -401,6 +414,21 @@ spec:
                         VERSION=$(/usr/bin/mvn -s $(workspaces.maven-settings.path)/settings.xml '-Dmaven.repo.local=$(workspaces.maven-local-repo.path)/.m2' -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
                         echo -n $VERSION | tee $(results.version.path)
                       workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
+                    - name: cache-upload--m2
+                      params:
+                        - name: PATTERNS
+                          value:
+                            - maven
+                        - name: TARGET
+                          value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
+                        - name: CACHE_PATH
+                          value: /.m2
+                        - name: WORKING_DIR
+                          value: $(workspaces.source.path)
+                        - name: FETCHED
+                          value: $(steps.cache-fetch--m2.results.fetched)
+                      ref:
+                        name: cache-upload
                 workspaces:
                     - description: The workspace consisting of maven project.
                       name: source
@@ -604,19 +632,6 @@ spec:
                 workspaces:
                     - name: shared-workspace
                 steps:
-                    - name: cache-fetch--m2
-                      ref:
-                        name: cache-fetch
-                      params:
-                        - name: PATTERNS
-                          value:
-                            - maven
-                        - name: SOURCE
-                          value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
-                        - name: CACHE_PATH
-                          value: /.m2
-                        - name: WORKING_DIR
-                          value: $(workspaces.shared-workspace.path)
                     - name: before-run
                       image: registry.redhat.io/rhel8/nodejs-22-minimal:latest
                       script: |
@@ -633,21 +648,6 @@ spec:
                         #!/bin/sh
                         echo "#### AFTER RUN ####"
                       onError: continue
-                    - name: cache-upload--m2
-                      ref:
-                        name: cache-upload
-                      params:
-                        - name: PATTERNS
-                          value:
-                            - maven
-                        - name: TARGET
-                          value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
-                        - name: CACHE_PATH
-                          value: /.m2
-                        - name: WORKING_DIR
-                          value: $(workspaces.shared-workspace.path)
-                        - name: FETCHED
-                          value: $(steps.cache-fetch--m2.results.fetched)
               runAfter:
                 - build-image
               workspaces:
