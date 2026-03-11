@@ -322,15 +322,15 @@ spec:
                         - '**/pom.xml'
                       env:
                         - name: PARAM_SOURCE
-                          value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
+                          value: oci://quay.io/siamaksade/spring-petclinic-workspace-maven-local-repo--m2:{{hash}}
                         - name: PARAM_CACHE_PATH
-                          value: /.m2
+                          value: /workspace/maven-local-repo/.m2
                         - name: PARAM_WORKING_DIR
                           value: $(workspaces.source.path)
                         - name: PARAM_INSECURE
                           value: "false"
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
-                      name: cache-fetch--m2
+                      name: cache-fetch-workspace-maven-local-repo--m2
                       results:
                         - name: fetched
                           type: string
@@ -439,19 +439,19 @@ spec:
                         - '**/pom.xml'
                       env:
                         - name: PARAM_TARGET
-                          value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
+                          value: oci://quay.io/siamaksade/spring-petclinic-workspace-maven-local-repo--m2:{{hash}}
                         - name: PARAM_CACHE_PATH
-                          value: /.m2
+                          value: /workspace/maven-local-repo/.m2
                         - name: PARAM_WORKING_DIR
                           value: $(workspaces.source.path)
                         - name: PARAM_INSECURE
                           value: "false"
                         - name: RESULT_CACHE_FETCHED
-                          value: $(steps.cache-fetch--m2.results.fetched)
+                          value: $(steps.cache-fetch-workspace-maven-local-repo--m2.results.fetched)
                         - name: PARAM_FORCE_CACHE_UPLOAD
                           value: "false"
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
-                      name: cache-upload--m2
+                      name: cache-upload-workspace-maven-local-repo--m2
                       script: |
                         #!/bin/sh
                         if [ "${PARAM_FORCE_CACHE_UPLOAD}" = "false" ] && [ "${RESULT_CACHE_FETCHED}" = "true" ]; then
@@ -490,6 +490,8 @@ spec:
                 - name: source
                   workspace: shared-workspace
                 - name: maven-settings
+                  workspace: shared-workspace
+                - name: maven-local-repo
                   workspace: shared-workspace
             - name: build-image
               taskSpec:
