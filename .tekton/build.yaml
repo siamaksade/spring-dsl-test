@@ -96,9 +96,9 @@ spec:
                 steps:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: before-run
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN ####"
+                        echo "#### BEFORE RUN
                     - env:
                         - name: HOME
                           value: $(params.userHome)
@@ -229,9 +229,9 @@ spec:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: after-run
                       onError: continue
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -369,9 +369,9 @@ spec:
                         fi
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: before-run
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN ####"
+                        echo "#### BEFORE RUN
                     - image: registry.access.redhat.com/ubi8/ubi-minimal:8.2
                       name: mvn-settings
                       script: |
@@ -457,9 +457,9 @@ spec:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: after-run
                       onError: continue
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN
                     - args:
                         - '**/pom.xml'
                       env:
@@ -633,9 +633,9 @@ spec:
                 steps:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: before-run
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN ####"
+                        echo "#### BEFORE RUN
                     - args:
                         - $(params.BUILD_ARGS[*])
                       computeResources: {}
@@ -660,9 +660,9 @@ spec:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: after-run
                       onError: continue
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
@@ -688,6 +688,8 @@ spec:
               workspaces:
                 - name: source
                   workspace: shared-workspace
+                - name: rhel-entitlement
+                  workspace: shared-workspace
             - name: security-scan
               taskSpec:
                 description: |-
@@ -710,9 +712,9 @@ spec:
                 steps:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: before-run
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN ####"
+                        echo "#### BEFORE RUN
                     - args:
                         - $(params.ARGS)
                       image: $(params.TRIVY_IMAGE)
@@ -738,9 +740,9 @@ spec:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: after-run
                       onError: continue
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN
                 workspaces:
                     - name: manifest-dir
               runAfter:
@@ -839,9 +841,9 @@ spec:
                 steps:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: before-run
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN ####"
+                        echo "#### BEFORE RUN
                     - env:
                         - name: HOME
                           value: $(params.userHome)
@@ -972,9 +974,9 @@ spec:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: after-run
                       onError: continue
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -1068,9 +1070,9 @@ spec:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: after-run
                       onError: continue
-                      script: |
+                      script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
