@@ -7,6 +7,7 @@ metadata:
     annotations:
         pipelinesascode.tekton.dev/on-event: '[push]'
         pipelinesascode.tekton.dev/on-target-branch: '[main]'
+        pipelinesascode.tekton.dev/step-action: '[https://raw.githubusercontent.com/openshift-pipelines/tekton-caches/main/tekton/cache-fetch.yaml, https://raw.githubusercontent.com/openshift-pipelines/tekton-caches/main/tekton/cache-upload.yaml]'
 spec:
     pipelineSpec:
         params:
@@ -606,11 +607,39 @@ spec:
                 workspaces:
                     - name: shared-workspace
                 steps:
+                    - name: cache-fetch--m2
+                      ref:
+                        name: cache-fetch
+                      params:
+                        - name: PATTERNS
+                          value:
+                            - maven
+                        - name: SOURCE
+                          value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
+                        - name: CACHE_PATH
+                          value: /.m2
+                        - name: WORKING_DIR
+                          value: $(workspaces.shared-workspace.path)
                     - name: deploy
                       image: registry.redhat.io/rhel8/nodejs-22-minimal:latest
                       script: |-
                         #!/bin/sh
                         npx ascii-themes generate OpenShift
+                    - name: cache-upload--m2
+                      ref:
+                        name: cache-upload
+                      params:
+                        - name: PATTERNS
+                          value:
+                            - maven
+                        - name: TARGET
+                          value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
+                        - name: CACHE_PATH
+                          value: /.m2
+                        - name: WORKING_DIR
+                          value: $(workspaces.shared-workspace.path)
+                        - name: FETCHED
+                          value: $(steps.cache-fetch--m2.results.fetched)
               runAfter:
                 - build-image
               workspaces:
