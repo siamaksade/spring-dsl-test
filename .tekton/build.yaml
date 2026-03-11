@@ -7,7 +7,6 @@ metadata:
     annotations:
         pipelinesascode.tekton.dev/on-event: '[push]'
         pipelinesascode.tekton.dev/on-target-branch: '[main]'
-        pipelinesascode.tekton.dev/step-action: '[https://raw.githubusercontent.com/openshift-pipelines/tekton-caches/main/tekton/cache-fetch.yaml, https://raw.githubusercontent.com/openshift-pipelines/tekton-caches/main/tekton/cache-upload.yaml]'
 spec:
     pipelineSpec:
         params:
@@ -319,19 +318,41 @@ spec:
                       name: version
                       type: string
                 steps:
-                    - name: cache-fetch--m2
-                      params:
-                        - name: PATTERNS
-                          value:
-                            - maven
-                        - name: SOURCE
+                    - args:
+                        - maven
+                      env:
+                        - name: PARAM_SOURCE
                           value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
-                        - name: CACHE_PATH
+                        - name: PARAM_CACHE_PATH
                           value: /.m2
-                        - name: WORKING_DIR
+                        - name: PARAM_WORKING_DIR
                           value: $(workspaces.source.path)
-                      ref:
-                        name: cache-fetch
+                        - name: PARAM_INSECURE
+                          value: "false"
+                      image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
+                      name: cache-fetch--m2
+                      results:
+                        - name: fetched
+                          type: string
+                      script: |
+                        #!/bin/sh
+                        PATTERN_FLAGS=""
+                        echo "Patterns: $@"
+                        for p in "$@"; do
+                          PATTERN_FLAGS="${PATTERN_FLAGS} --pattern ${p}"
+                        done
+
+                        set -x
+                        /ko-app/cache fetch ${PATTERN_FLAGS} \
+                                            --source ${PARAM_SOURCE} \
+                                            --folder ${PARAM_CACHE_PATH} \
+                                            --insecure ${PARAM_INSECURE} \
+                                            --workingdir ${PARAM_WORKING_DIR}
+                        if [ $? -eq 0 ]; then
+                          echo -n true > $(step.results.fetched.path)
+                        else
+                          echo -n false > $(step.results.fetched.path)
+                        fi
                     - image: registry.access.redhat.com/ubi8/ubi-minimal:8.2
                       name: mvn-settings
                       script: |
@@ -414,21 +435,42 @@ spec:
                         VERSION=$(/usr/bin/mvn -s $(workspaces.maven-settings.path)/settings.xml '-Dmaven.repo.local=$(workspaces.maven-local-repo.path)/.m2' -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
                         echo -n $VERSION | tee $(results.version.path)
                       workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
-                    - name: cache-upload--m2
-                      params:
-                        - name: PATTERNS
-                          value:
-                            - maven
-                        - name: TARGET
+                    - args:
+                        - maven
+                      env:
+                        - name: PARAM_TARGET
                           value: oci://quay.io/siamaksade/spring-petclinic--m2:{{hash}}
-                        - name: CACHE_PATH
+                        - name: PARAM_CACHE_PATH
                           value: /.m2
-                        - name: WORKING_DIR
+                        - name: PARAM_WORKING_DIR
                           value: $(workspaces.source.path)
-                        - name: FETCHED
+                        - name: PARAM_INSECURE
+                          value: "false"
+                        - name: RESULT_CACHE_FETCHED
                           value: $(steps.cache-fetch--m2.results.fetched)
-                      ref:
-                        name: cache-upload
+                        - name: PARAM_FORCE_CACHE_UPLOAD
+                          value: "false"
+                      image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
+                      name: cache-upload--m2
+                      script: |
+                        #!/bin/sh
+                        if [ "${PARAM_FORCE_CACHE_UPLOAD}" = "false" ] && [ "${RESULT_CACHE_FETCHED}" = "true" ]; then
+                          echo "no need to upload cache"
+                          exit 0
+                        fi
+
+                        PATTERN_FLAGS=""
+                        echo "Patterns: $@"
+                        for p in "$@"; do
+                          PATTERN_FLAGS="${PATTERN_FLAGS} --pattern ${p}"
+                        done
+
+                        set -ex
+                        /ko-app/cache upload ${PATTERN_FLAGS} \
+                                            --target ${PARAM_TARGET} \
+                                            --folder ${PARAM_CACHE_PATH} \
+                                            --insecure ${PARAM_INSECURE} \
+                                            --workingdir ${PARAM_WORKING_DIR}
                 workspaces:
                     - description: The workspace consisting of maven project.
                       name: source
