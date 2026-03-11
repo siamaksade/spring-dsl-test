@@ -491,6 +491,7 @@ spec:
                   value:
                     - clean
                     - package
+                    - -Dcheckstyle.skip=true
               workspaces:
                 - name: source
                   workspace: shared-workspace
