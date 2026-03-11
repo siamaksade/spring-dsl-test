@@ -231,7 +231,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN ####""
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -459,7 +459,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN ####""
                     - args:
                         - '**/pom.xml'
                       env:
@@ -662,7 +662,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN ####""
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
@@ -902,7 +902,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN ####""
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -967,7 +967,7 @@ spec:
                         - name: WORKSPACES_KUBECONFIG_DIR_PATH
                           value: $(workspaces.kubeconfig_dir.path)
                 steps:
-                    - image: registry.access.redhat.com/ubi9-minimal
+                    - image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
                       name: before-run
                       script: |
                         #!/bin/sh
@@ -998,7 +998,7 @@ spec:
                       onError: continue
                       script: |
                         #!/bin/sh
-                        echo "#### AFTER RUN ####"
+                        echo "#### AFTER RUN ####""
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
