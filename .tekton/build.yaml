@@ -595,7 +595,7 @@ spec:
                 - build-jar
               params:
                 - name: IMAGE
-                  value: '{{ image_url }}'
+                  value: $(params.image_url)
               workspaces:
                 - name: source
                   workspace: shared-workspace
