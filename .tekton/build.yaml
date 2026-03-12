@@ -103,7 +103,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - env:
                         - name: HOME
                           value: $(params.userHome)
@@ -236,7 +236,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -376,7 +376,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - image: registry.access.redhat.com/ubi8/ubi-minimal:8.2
                       name: mvn-settings
                       script: |
@@ -464,7 +464,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                     - args:
                         - '**/pom.xml'
                       env:
@@ -642,7 +642,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - args:
                         - $(params.BUILD_ARGS[*])
                       computeResources: {}
@@ -669,7 +669,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
@@ -708,7 +708,7 @@ spec:
                       image: registry.access.redhat.com/ubi9-minimal
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - name: on-pr
                       image: docker.io/msoap/ascii-art
                       script: |-
@@ -718,7 +718,7 @@ spec:
                       image: registry.access.redhat.com/ubi9-minimal
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                       onError: continue
               runAfter:
                 - build-image
@@ -754,7 +754,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - args:
                         - $(params.ARGS)
                       image: $(params.TRIVY_IMAGE)
@@ -782,7 +782,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 workspaces:
                     - name: manifest-dir
               runAfter:
@@ -883,7 +883,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - env:
                         - name: HOME
                           value: $(params.userHome)
@@ -1016,7 +1016,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -1112,7 +1112,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
@@ -1142,7 +1142,7 @@ spec:
                       image: registry.access.redhat.com/ubi9-minimal
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - name: notify
                       image: curlimages/curl:latest
                       script: |-
@@ -1152,7 +1152,7 @@ spec:
                       image: registry.access.redhat.com/ubi9-minimal
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                       onError: continue
               workspaces:
                 - name: shared-workspace
@@ -1273,7 +1273,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - env:
                         - name: HOME
                           value: $(params.userHome)
@@ -1406,7 +1406,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -1546,7 +1546,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - image: registry.access.redhat.com/ubi8/ubi-minimal:8.2
                       name: mvn-settings
                       script: |
@@ -1634,7 +1634,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                     - args:
                         - '**/pom.xml'
                       env:
@@ -1812,7 +1812,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - args:
                         - $(params.BUILD_ARGS[*])
                       computeResources: {}
@@ -1839,7 +1839,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
@@ -1878,7 +1878,7 @@ spec:
                       image: registry.access.redhat.com/ubi9-minimal
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - name: on-pr
                       image: docker.io/msoap/ascii-art
                       script: |-
@@ -1888,7 +1888,7 @@ spec:
                       image: registry.access.redhat.com/ubi9-minimal
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                       onError: continue
               runAfter:
                 - build-image
@@ -1924,7 +1924,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - args:
                         - $(params.ARGS)
                       image: $(params.TRIVY_IMAGE)
@@ -1952,7 +1952,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 workspaces:
                     - name: manifest-dir
               runAfter:
@@ -2053,7 +2053,7 @@ spec:
                       name: before-run
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - env:
                         - name: HOME
                           value: $(params.userHome)
@@ -2186,7 +2186,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 volumes:
                     - emptyDir: {}
                       name: user-home
@@ -2282,7 +2282,7 @@ spec:
                       onError: continue
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                 volumes:
                     - emptyDir: {}
                       name: scripts-dir
@@ -2312,7 +2312,7 @@ spec:
                       image: registry.access.redhat.com/ubi9-minimal
                       script: |-
                         #!/bin/sh
-                        echo "#### BEFORE RUN
+                        echo "BEFORE RUN"
                     - name: notify
                       image: curlimages/curl:latest
                       script: |-
@@ -2322,7 +2322,7 @@ spec:
                       image: registry.access.redhat.com/ubi9-minimal
                       script: |-
                         #!/bin/sh
-                        echo "#### AFTER RUN
+                        echo "AFTER RUN"
                       onError: continue
               workspaces:
                 - name: shared-workspace
