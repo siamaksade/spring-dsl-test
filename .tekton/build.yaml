@@ -7,7 +7,7 @@ metadata:
     annotations:
         pipelinesascode.tekton.dev/cancel-in-progress: "true"
         pipelinesascode.tekton.dev/on-event: '[pull_request, push]'
-        pipelinesascode.tekton.dev/on-target-branch: '[main]'
+        pipelinesascode.tekton.dev/on-target-branch: '[test-dsl]'
 spec:
     pipelineSpec:
         params:
