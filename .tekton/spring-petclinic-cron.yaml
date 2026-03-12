@@ -16,7 +16,7 @@ spec:
                             - |-
                               curl -s -X POST \
                                 -H "Content-Type: application/json" \
-                                "https://pipelines-as-code-controller.openshift-pipelines.svc.cluster.local:8443/incoming" \
+                                "http://pipelines-as-code-controller.openshift-pipelines.svc.cluster.local:8080/incoming" \
                                 -d '{
                                   "repository": "'"${REPOSITORY}"'",
                                   "branch": "main",
@@ -28,7 +28,7 @@ spec:
                             - -c
                           env:
                             - name: PAC_CONTROLLER_URL
-                              value: https://pipelines-as-code-controller.openshift-pipelines.svc.cluster.local:8443
+                              value: http://pipelines-as-code-controller.openshift-pipelines.svc.cluster.local:8080
                             - name: REPOSITORY
                               value: spring-petclinic-repo
                             - name: WEBHOOK_SECRET
