@@ -335,6 +335,10 @@ spec:
                     - description: version
                       name: version
                       type: string
+                stepTemplate:
+                    resources:
+                        requests:
+                            memory: 2Gi
                 steps:
                     - args:
                         - '**/pom.xml'
@@ -1507,6 +1511,10 @@ spec:
                     - description: version
                       name: version
                       type: string
+                stepTemplate:
+                    resources:
+                        requests:
+                            memory: 2Gi
                 steps:
                     - args:
                         - '**/pom.xml'
