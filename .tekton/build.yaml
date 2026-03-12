@@ -21,6 +21,7 @@ spec:
         workspaces:
             - name: shared-workspace
             - name: secret-dockerconfig
+            - name: secret-quay-credentials
         tasks:
             - name: git-source
               taskSpec:
@@ -347,7 +348,7 @@ spec:
                         - name: PARAM_INSECURE
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-dockerconfig.path)
+                          value: $(workspaces.secret-quay-credentials.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-fetch-m2
                       results:
@@ -481,7 +482,7 @@ spec:
                         - name: PARAM_FORCE_CACHE_UPLOAD
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-dockerconfig.path)
+                          value: $(workspaces.secret-quay-credentials.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-upload-m2
                       script: |
@@ -635,8 +636,6 @@ spec:
                           value: $(results.IMAGE_URL.path)
                         - name: RESULTS_IMAGE_DIGEST_PATH
                           value: $(results.IMAGE_DIGEST.path)
-                        - name: DOCKER_CONFIG
-                          value: $(workspaces.dockerconfig.path)
                 steps:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: before-run
@@ -1168,6 +1167,9 @@ spec:
                         storage: 1Gi
         - name: secret-dockerconfig
           secret:
+            secretName: registry-auth
+        - name: secret-quay-credentials
+          secret:
             secretName: quay-credentials
 ---
 apiVersion: tekton.dev/v1
@@ -1191,6 +1193,7 @@ spec:
         workspaces:
             - name: shared-workspace
             - name: secret-dockerconfig
+            - name: secret-quay-credentials
         tasks:
             - name: git-source
               taskSpec:
@@ -1517,7 +1520,7 @@ spec:
                         - name: PARAM_INSECURE
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-dockerconfig.path)
+                          value: $(workspaces.secret-quay-credentials.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-fetch-m2
                       results:
@@ -1651,7 +1654,7 @@ spec:
                         - name: PARAM_FORCE_CACHE_UPLOAD
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-dockerconfig.path)
+                          value: $(workspaces.secret-quay-credentials.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-upload-m2
                       script: |
@@ -1805,8 +1808,6 @@ spec:
                           value: $(results.IMAGE_URL.path)
                         - name: RESULTS_IMAGE_DIGEST_PATH
                           value: $(results.IMAGE_DIGEST.path)
-                        - name: DOCKER_CONFIG
-                          value: $(workspaces.dockerconfig.path)
                 steps:
                     - image: registry.access.redhat.com/ubi9-minimal
                       name: before-run
@@ -2337,5 +2338,8 @@ spec:
                     requests:
                         storage: 1Gi
         - name: secret-dockerconfig
+          secret:
+            secretName: registry-auth
+        - name: secret-quay-credentials
           secret:
             secretName: quay-credentials
