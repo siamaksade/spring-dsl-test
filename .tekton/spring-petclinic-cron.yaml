@@ -30,7 +30,7 @@ spec:
                             - name: PAC_CONTROLLER_URL
                               value: http://pipelines-as-code-controller.openshift-pipelines.svc.cluster.local:8080
                             - name: REPOSITORY
-                              value: spring-petclinic-repo
+                              value: spring-dsl-test
                             - name: WEBHOOK_SECRET
                               valueFrom:
                                 secretKeyRef:
