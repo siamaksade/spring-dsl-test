@@ -5,14 +5,9 @@ metadata:
     labels:
         app.kubernetes.io/managed-by: tkn-dsl
     annotations:
-        pipelinesascode.tekton.dev/on-event: '[incoming]'
+        pipelinesascode.tekton.dev/cancel-in-progress: "true"
+        pipelinesascode.tekton.dev/on-event: '[push]'
         pipelinesascode.tekton.dev/on-target-branch: '[main]'
-        pipelinesascode.tekton.dev/task: cluster://openshift-pipelines/buildah
-        pipelinesascode.tekton.dev/task-1: maven:0.4.0
-        pipelinesascode.tekton.dev/task-2: cluster://openshift-pipelines/openshift-client
-        pipelinesascode.tekton.dev/task-3: git-clone:0.10.0
-        pipelinesascode.tekton.dev/task-4: git-clone:0.10.0
-        pipelinesascode.tekton.dev/task-5: trivy-scanner
 spec:
     pipelineSpec:
         params:
