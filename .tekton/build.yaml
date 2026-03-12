@@ -6,7 +6,7 @@ metadata:
         app.kubernetes.io/managed-by: tkn-dsl
     annotations:
         pipelinesascode.tekton.dev/cancel-in-progress: "true"
-        pipelinesascode.tekton.dev/on-event: '[push]'
+        pipelinesascode.tekton.dev/on-event: '[pull_request, push]'
         pipelinesascode.tekton.dev/on-target-branch: '[main]'
 spec:
     pipelineSpec:
@@ -20,7 +20,6 @@ spec:
         workspaces:
             - name: shared-workspace
             - name: secret-dockerconfig
-            - name: secret-quay-credentials
         tasks:
             - name: git-source
               taskSpec:
@@ -351,7 +350,7 @@ spec:
                         - name: PARAM_INSECURE
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-quay-credentials.path)
+                          value: $(workspaces.secret-dockerconfig.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-fetch-m2
                       results:
@@ -485,7 +484,7 @@ spec:
                         - name: PARAM_FORCE_CACHE_UPLOAD
                           value: "false"
                         - name: DOCKER_CONFIG
-                          value: $(workspaces.secret-quay-credentials.path)
+                          value: $(workspaces.secret-dockerconfig.path)
                       image: registry.redhat.io/openshift-pipelines/pipelines-cache-rhel9@sha256:ce548401247c025aa5dee6ed641ede514a8ce19cbfb6fbe41edeabcdb1d493f2
                       name: cache-upload-m2
                       script: |
@@ -1171,6 +1170,3 @@ spec:
         - name: secret-dockerconfig
           secret:
             secretName: registry-auth
-        - name: secret-quay-credentials
-          secret:
-            secretName: quay-credentials
