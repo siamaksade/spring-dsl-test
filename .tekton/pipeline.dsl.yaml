@@ -3,23 +3,33 @@ name: spring-petclinic
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 params:
   image_url: "quay.io/siamaksade/spring-petclinic:{{ source_branch }}"
+  git_event: {{event}}
 
 cache:
   image: oci://quay.io/siamaksade/spring-petclinic-m2-cache
-  credentials: quay-credentials
+  credentials: registry-auth
 
 defaults:
-  image: registry.access.redhat.com/ubi9-minimal
-  before_run: |
-    echo "#### BEFORE RUN ####"
-  after_run: |
-    echo "#### AFTER RUN ####"
+  before_run:
+    image: registry.access.redhat.com/ubi9-minimal
+    run: echo "BEFORE RUN"
+  after_run:
+    image: registry.access.redhat.com/ubi9-minimal
+    run: echo "AFTER RUN"
+
+secrets:
+  dockerconfig: registry-auth
+
+concurrency:
+  cancel-in-progress: true
 
 tasks:
-  git:
+  git-source:
     uses: git-clone:0.10.0
     params:
       url: {{ repo_url }}
@@ -28,19 +38,53 @@ tasks:
   build-jar:
     uses: maven:0.4.0
     params:
-      GOALS: ["clean", "package"]
-    workspaces:
-      maven-local-repo: shared-workspace
+      GOALS: ["clean", "package", "-Dcheckstyle.skip=true"]
     cache:
       path: /workspace/maven-local-repo/.m2
       key: ["**/pom.xml"]
+    tekton:
+      stepTemplate:
+        resources:
+          requests:
+            memory: 2Gi
 
   build-image:
-    uses: buildah:0.8.0
+    uses: cluster://openshift-pipelines/buildah
     params:
       IMAGE: $(params.image_url)
       TLS_VERIFY: false
 
+  on-pr:
+    if: params.git_event == "pull_request"
+    image: docker.io/msoap/ascii-art
+    run: neo-cowsay --rainbow "Pull Request!"
+
+  security-scan:
+    uses: trivy-scanner
+    needs: ["build-image"]
+    params:
+      ARGS: ["image", "--severity", "HIGH,CRITICAL", "--exit-code", "0"]
+      TRIVY_IMAGE: docker.io/aquasec/trivy:latest
+      IMAGE_PATH: "$(tasks.build-image.results.IMAGE_URL)@$(tasks.build-image.results.IMAGE_DIGEST)"
+
+  git-manifests:
+    uses: git-clone:0.10.0
+    needs: ["build-image"]
+    params:
+      url: https://github.com/siamaksade/spring-petclinic-config
+
   deploy:
-    image: registry.redhat.io/rhel8/nodejs-22-minimal:latest
-    run: npx ascii-themes generate OpenShift
+    uses: cluster://openshift-pipelines/openshift-client
+    needs: [security-scan, git-manifests]
+    before_run: |
+      cd $(workspace)/environments/dev
+      sed -i "s|spring-petclinic:.*|spring-petclinic:latest@$(tasks.build-image.results.IMAGE_DIGEST)|g" kustomization.yaml
+      cat kustomization.yaml
+    params:
+      SCRIPT: oc apply -k $(workspace)/environments/dev
+
+finally:
+  notify:
+    image: curlimages/curl:latest
+    run: |
+      curl -X POST https://hooks.slack.com/ -d '{"text": "Pipeline completed"}'
